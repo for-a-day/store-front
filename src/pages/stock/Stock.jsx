@@ -2,7 +2,7 @@ import { Typography } from '@mui/material';
 import React from 'react';
 import BasicTable from '../../components/tableForm/BasicTable';
 
-const Stoke = () => {
+const Stock = () => {
   return (
     <div>
       <BasicTable />
@@ -10,4 +10,4 @@ const Stoke = () => {
   );
 };
 
-export default Stoke;
+export default Stock;

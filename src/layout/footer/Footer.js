@@ -10,7 +10,7 @@ import {
   ListItemIcon,
   ListItemText,
 } from "@mui/material";
-import Menuitems from "./data";
+import {Menuitems} from "./data";
 
 const Footer = () => {
   const { pathname } = useLocation();
@@ -31,7 +31,7 @@ const Footer = () => {
 
       <Box>
         <List sx={{ display: 'flex', justifyContent: 'center', p: 0 }}>
-          {Menuitems.map((item, index) => (
+          {Menuitems && Menuitems.map((item, index) => (
             <ListItem
               key={item.title}
               onClick={() => handleClick(index)}

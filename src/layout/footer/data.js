@@ -8,11 +8,16 @@ import SwitchLeftOutlinedIcon from '@mui/icons-material/SwitchLeftOutlined';
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import AutoAwesomeMosaicOutlinedIcon from '@mui/icons-material/AutoAwesomeMosaicOutlined';
 
-const Menuitems = [
+export const Menuitems = [
   {
-    title: "메뉴",
+    title: "메뉴 관리",
     icon: DescriptionOutlinedIcon,
     href: "/menu",
+  },
+  {
+    title: "주문 관리",
+    icon: DescriptionOutlinedIcon,
+    href: "/order",
   },
   {
     title: "테이블관리",
@@ -22,7 +27,7 @@ const Menuitems = [
   {
     title: "재고",
     icon: AddToPhotosOutlinedIcon,
-    href: "/stoke",
+    href: "/stock",
   },
   {
     title: "매출",
@@ -31,4 +36,17 @@ const Menuitems = [
   },
 ];
 
-export default Menuitems;
+
+export const Adminitems = [
+  {
+    title: "메뉴 관리",
+    icon: DescriptionOutlinedIcon,
+    href: "/menu",
+  },
+  {
+    title: "지점 관리",
+    icon: AutoAwesomeMosaicOutlinedIcon,
+    href: "/table",
+  }
+];
+

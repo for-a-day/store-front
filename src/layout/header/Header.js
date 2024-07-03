@@ -34,6 +34,12 @@ const Header = (props) => {
     time: ''
   });
 
+  useEffect(()=>{
+    setStoreName(localStorage.getItem('storeName'));
+    setSellerName(localStorage.getItem('rprName'));
+    setPosNumber(localStorage.getItem('storeNo'));
+  }, [localStorage.getItem('login')])
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -48,9 +54,14 @@ const Header = (props) => {
   const handleClick4 = (event) => {
     setAnchorEl4(event.currentTarget);
   };
-
   const handleClose4 = () => {
     setAnchorEl4(null);
+  };
+
+  const LogoutClick = () => {
+    localStorage.clear();
+    console.log(localStorage.length);
+    props.setLogin('inactive');
   };
 
   // 5
@@ -174,7 +185,7 @@ const Header = (props) => {
             판매자 : {sellerName}
           </Typography>
           <Typography sx={{pr:20, color:"black"}}>
-            포스번호 : {posNumber}
+            매장번호 : {posNumber}
           </Typography>
         </Box>
         <Box sx={{display:"flex", fontSize:15}}>
@@ -295,7 +306,7 @@ const Header = (props) => {
             </ListItemIcon>
             Settings
           </MenuItem>
-          <MenuItem onClick={handleClose4}>
+          <MenuItem onClick={LogoutClick}>
             <ListItemIcon>
               <LogoutOutlinedIcon fontSize="small" />
             </ListItemIcon>
