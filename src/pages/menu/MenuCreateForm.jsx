@@ -20,10 +20,10 @@ import {
   MenuItem,
 } from '@mui/material';
 
-const MenuCreateForm = ({ setState, menuChange, nowCategoryNo }) => {
+const MenuCreateForm = ({ setState, menuChange, nowCategoryNo, handelCancle, handlePopupOpen }) => {
   const handleCancelClick = () => {
     console.log('취소 버튼이 클릭되었습니다.');
-    setState('menu');
+    handelCancle();
   };
 
   const handleConfirmClick = () => {
@@ -54,6 +54,7 @@ const MenuCreateForm = ({ setState, menuChange, nowCategoryNo }) => {
       .then((response) => {
         if (response.status !== 200) {
           throw new Error('서버 응답 오류');
+          handlePopupOpen('서버 응답 오류');
         }
         return response.json();
       })
@@ -63,6 +64,7 @@ const MenuCreateForm = ({ setState, menuChange, nowCategoryNo }) => {
         setState('default'); // 폼 닫기
       })
       .catch((error) => {
+        handlePopupOpen('메뉴 추가 실패');
         console.error('메뉴 추가 실패:', error.message);
       });
   };

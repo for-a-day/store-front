@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-
 import MenuCard from '../../components/BaseCard/MenuCard';
 import {
   Box,
-  List,
-  ListItem,
   ListItemText,
   Button,
   Grid,
@@ -13,7 +9,6 @@ import {
 } from "@mui/material";
 
 import AddIcon from '@mui/icons-material/Add';
-import { fetchCategories, deleteCategory, STATE, fetchMenus } from './MenuService';
 
 const Menus = ({categoryDelete, setState, menuItem, setNow, nowMenu}) => {
 

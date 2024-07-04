@@ -12,10 +12,10 @@ import {
   Grid,
 } from '@mui/material';
 
-const CategoryForm = ({ setState, categoryChange }) => {
+const CategoryForm = ({ setState, categoryChange, handelCancle, handlePopupOpen }) => {
   const handleCancelClick = () => {
     console.log('취소 버튼이 클릭되었습니다.');
-    setState('default');
+    handelCancle();
   };
 
   const handleConfirmClick = () => {
@@ -38,6 +38,7 @@ const CategoryForm = ({ setState, categoryChange }) => {
     })
       .then((response) => {
         if (!response.ok) {
+          handlePopupOpen('서버 응답 오류');
           throw new Error('서버 응답 오류');
         }
         return response.json();
@@ -49,6 +50,7 @@ const CategoryForm = ({ setState, categoryChange }) => {
       })
       .catch((error) => {
         console.error('카테고리 추가 실패:', error.message);
+        handlePopupOpen('카테고리 추가 실패');
         // 실패 시 사용자에게 알림을 주거나 다른 처리를 수행할 수 있습니다.
       });
   };

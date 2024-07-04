@@ -1,64 +1,55 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import {
   Box,
-  List,
-  ListItem,
-  ListItemText,
+  Paper,
+  Tabs,
+  Tab,
   Button,
 } from "@mui/material";
-
 import AddIcon from '@mui/icons-material/Add';
 
-const Categorys = ({ setState, categoryItem, setNow, nowCategory}) => {
+const Categorys = ({ setState, categoryItem, setNow, nowCategory, loadMenus }) => {
+  const [selectedCategory, setSelectedCategory] = React.useState(0);
+
   const handleAddCategory = () => {
     console.log('Add category clicked');
     setState("categoryCreate");
   };
 
-  const handleClick = (categoryNo) => {
+  useEffect(() =>{
+      if (categoryItem.length > 0) {
+        const initialCategoryNo = categoryItem[0].categoryNo;
+        setNow(initialCategoryNo);
+        loadMenus(initialCategoryNo);
+        setSelectedCategory(0); 
+        console.log(initialCategoryNo);
+      }
+    
+  }, [categoryItem]);
+
+  const handleTabChange = (event, newValue) => {
+    setSelectedCategory(newValue);
+    const categoryNo = categoryItem[newValue].categoryNo;
     setNow(categoryNo);
     setState("default");
+    console.log(categoryNo);
+    loadMenus(categoryNo);
   };
 
   return (
-      <Box>
-         <List sx={{ display: 'flex', justifyContent: 'center', p: 0 }}>
-        {categoryItem && categoryItem.map((item) => (
-          <ListItem
-            key={item.categoryNo}
-            onClick={() => handleClick(item.categoryNo)}
-            sx={{
-              mx: 1,
-              width:100,
-              ...(nowCategory === item.categoryNo && {
-                color: "white",
-                backgroundColor: (theme) =>
-                  `${theme.palette.primary.main}!important`,
-              }),
-            }}
-          >
-            <ListItemText>{item.categoryName}</ListItemText>
-          </ListItem>
-        ))}
-          <ListItem
-            key='add'
-            sx={{
-              mx: 1,
-              width:100,
-            }}
-          >
-            
-        <Button variant="contained" color="primary" onClick={handleAddCategory} fullWidth>
-            {<AddIcon sx={{ fontSize: 20 }} />}
-          </Button>
-
-          </ListItem>
-        
-      </List>
+    <Paper square>
+      <Box display="flex" alignItems="center">
+        <Tabs value={selectedCategory} onChange={handleTabChange} aria-label="Categories" sx={{ flexGrow: 1 }}>
+          {categoryItem.map((category, index) => (
+            <Tab key={index} label={category.categoryName} />
+          ))}
+        </Tabs>
+        <Button variant="contained" color="primary" onClick={handleAddCategory} sx={{ ml: 2 }}>
+          <AddIcon sx={{ fontSize: 20 }} />
+        </Button>
       </Box>
-
-  ); 
+    </Paper>
+  );
 };
 
 export default Categorys;

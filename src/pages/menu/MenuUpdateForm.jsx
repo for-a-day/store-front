@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 import axios from 'axios';
 
-const MenuUpdateForm = ({ setState, menuItem, menuChange, nowCategoryNo }) => {
+const MenuUpdateForm = ({ setState, menuItem, menuChange, nowCategoryNo, handlePopupOpen }) => {
   const [menuName, setMenuName] = useState('');
   const [menuId, setMenuId] = useState('');
   const [description, setDescription] = useState('');
@@ -61,15 +61,18 @@ const MenuUpdateForm = ({ setState, menuItem, menuChange, nowCategoryNo }) => {
     })
       .then((response) => {
         if (response.status !== 200) {
+          handlePopupOpen('서버 응답 오류');
           throw new Error('서버 응답 오류');
         }
         return response.json();
       })
       .then((data) => {
         console.log(data);
-        setState('default'); // 폼 닫기
+
+        handlePopupOpen('수정 완료');
       })
       .catch((error) => {
+        handlePopupOpen('메뉴 수정 실패');
         console.error('메뉴 수정 실패:', error.message);
       });
   };
@@ -80,12 +83,12 @@ const MenuUpdateForm = ({ setState, menuItem, menuChange, nowCategoryNo }) => {
         `http://localhost:9001/admin/menu?menuNo=${menuItem.menuNo}`,
       );
       if (response.status !== 200) {
-        throw new Error('서버 응답 오류');
+        handlePopupOpen('서버 응답 오류');
       }
       return response.data;
     } catch (error) {
-      console.error('카테고리 삭제 실패:', error.message);
-      throw error;
+      handlePopupOpen('메뉴 삭제 실패');
+      console.error('메뉴 삭제 실패:', error.message);
     }
   };
 

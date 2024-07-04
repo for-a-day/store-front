@@ -13,6 +13,9 @@ export const STATE = {
 export const fetchCategories = async () => {
   try {
     const response = await axios.get('http://localhost:9001/admin/category');
+    if  (response.status !== 200)  {
+      throw new Error('서버 응답 오류');
+    }
     const categoryList = response.data.data.categoryList;
     if (categoryList) {
       categoryList.sort((a, b) => a.categoryNo - b.categoryNo);
