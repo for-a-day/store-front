@@ -38,7 +38,7 @@ const Header = (props) => {
     setStoreName(localStorage.getItem('storeName'));
     setSellerName(localStorage.getItem('rprName'));
     setPosNumber(localStorage.getItem('storeNo'));
-  }, [localStorage.getItem('login')])
+  }, [localStorage.getItem('storeNo')])
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);

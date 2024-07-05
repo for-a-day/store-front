@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-
 import axios from 'axios';
 import {
   Typography,
@@ -10,7 +9,6 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-
 
 const TOTable = () => {
   const [tableList, setTableList] = useState([]);
@@ -33,7 +31,12 @@ const TOTable = () => {
     }
   }
 
-  useEffect(()=>{getTables();}, []);
+  useEffect(() => { getTables(); }, []);
+
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString('ko-KR', options);
+  }
 
 
   return (
@@ -57,17 +60,17 @@ const TOTable = () => {
                 테이블명
               </Typography>
             </TableCell>
-            <TableCell align="right">
+            <TableCell>
               <Typography color="textSecondary" variant="h6">
                 테이블코드
               </Typography>
             </TableCell>
-            <TableCell align="right">
+            <TableCell >
               <Typography color="textSecondary" variant="h6">
                 등록 날짜
               </Typography>
             </TableCell>
-            <TableCell align="right">
+            <TableCell >
               <Typography color="textSecondary" variant="h6">
                 상태
               </Typography>
@@ -90,25 +93,24 @@ const TOTable = () => {
 
               <TableCell>
                 <Typography color="textSecondary" variant="h6">
-                {table.tableName}
+                  {table.tableName}
                 </Typography>
               </TableCell>
               <TableCell>
                 <Typography color="textSecondary" variant="h6">
-                {table.tableCode}
+                  {table.tableCode}
                 </Typography>
               </TableCell>
-              <TableCell align="right">
-                <Typography variant="h6">{table.registerDate}</Typography>
+              <TableCell >
+                <Typography variant="h6">{formatDate(table.registerDate)}</Typography>
               </TableCell>
-              <TableCell align="right">
-                <Typography variant="h6">{table.state===1? '등록됨' : '등록대기중'}</Typography>
+              <TableCell >
+                <Typography variant="h6">{table.state === 1 ? '등록됨' : '등록대기중'}</Typography>
               </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
-
     </>
   );
 };

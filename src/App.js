@@ -8,6 +8,7 @@ import Sales from './pages/sales/Sales';
 import Menu from './pages/menu/Menu';
 import Login from './pages/login/Login';
 import Order from './pages/order/Order';
+import Payment from './pages/order/Payment';
 import { ThemeProvider } from '@mui/material/styles';
 import { baseTheme } from './assets/global/Theme-variable';
 import FullLayout from './layout/FullLayout';
@@ -22,7 +23,7 @@ function App() {
       <BrowserRouter>
         <ThemeProvider theme={theme}>
           <Routes>
-            {localStorage.length <= 0 ? (
+            {!localStorage.getItem('storeNo') ? (
               <Route path='/' element={<Login setLogin={setLogin}/>} />
             ) : (
               <Route path='/' element={<FullLayout setLogin={setLogin}/>}>
@@ -32,6 +33,7 @@ function App() {
               <Route path='stock' element={<Stock />} />
               <Route path='sales' element={<Sales />} />
               <Route path='order' element={<Order />} />
+              <Route path='payment' element={<Payment />} />
             </Route>
             )}
           </Routes>

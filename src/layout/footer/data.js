@@ -10,11 +10,6 @@ import AutoAwesomeMosaicOutlinedIcon from '@mui/icons-material/AutoAwesomeMosaic
 
 export const Menuitems = [
   {
-    title: "메뉴 관리",
-    icon: DescriptionOutlinedIcon,
-    href: "/menu",
-  },
-  {
     title: "주문 관리",
     icon: DescriptionOutlinedIcon,
     href: "/order",
