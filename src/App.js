@@ -5,7 +5,6 @@ import Main from './pages/main/Main';
 import Table from './pages/table/Table';
 import Stock from './pages/stock/Stock';
 import Sales from './pages/sales/Sales';
-import Menu from './pages/menu/Menu';
 import Login from './pages/login/Login';
 import Order from './pages/order/Order';
 import Payment from './pages/order/Payment';
@@ -28,7 +27,6 @@ function App() {
             ) : (
               <Route path='/' element={<FullLayout setLogin={setLogin}/>}>
               <Route index element={<Main />} />
-              <Route path='menu' element={<Menu />} />
               <Route path='table' element={<Table />} />
               <Route path='stock' element={<Stock />} />
               <Route path='sales' element={<Sales />} />

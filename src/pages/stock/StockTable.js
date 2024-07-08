@@ -57,7 +57,7 @@ const StockTable = () => {
   const purchaseOrderComplete = async (porderNo) => {
     const state = 1;
 
-    fetch('http://localhost:9001/purchaseOrder', {
+    fetch('http://localhost:9001/purchaseorder', {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -98,7 +98,7 @@ const StockTable = () => {
   }
 
   const purchaseOrder = async () => {
-    fetch('http://localhost:9001/purchaseOrder', {
+    fetch('http://localhost:9001/purchaseorder', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

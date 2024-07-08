@@ -31,7 +31,7 @@ const PageWrapper = experimentalStyled("div")(({ theme }) => ({
   },
 }));
 
-const FullLayout = ({setLogin}) => {
+const FullLayout = () => {
   //
   const [isSidebarOpen, setSidebarOpen] = useState(true);
   const [isMobileSidebarOpen, setMobileSidebarOpen] = useState(false);
@@ -39,7 +39,6 @@ const FullLayout = ({setLogin}) => {
   return (
     <MainWrapper>
       <Header
-      setLogin={setLogin}
         sx={{
           paddingLeft: isSidebarOpen && lgUp ? "150px" : "",
           paddingRight: isSidebarOpen && lgUp ? "150px" : "",
