@@ -10,6 +10,7 @@ import Header from "./header/Header";
 import Sidebar from "./sidebar/Sidebar";
 import Footer from "./footer/Footer";
 import { TopbarHeight } from "../assets/global/Theme-variable";
+import { Palette } from "../components/palette/Palette";
 
 const MainWrapper = experimentalStyled("div")(({ theme }) => ({
   display: "flex",
@@ -31,7 +32,7 @@ const PageWrapper = experimentalStyled("div")(({ theme }) => ({
   },
 }));
 
-const FullLayout = () => {
+const FullLayout = ({setLogin}) => {
   //
   const [isSidebarOpen, setSidebarOpen] = useState(true);
   const [isMobileSidebarOpen, setMobileSidebarOpen] = useState(false);
@@ -42,10 +43,11 @@ const FullLayout = () => {
         sx={{
           paddingLeft: isSidebarOpen && lgUp ? "150px" : "",
           paddingRight: isSidebarOpen && lgUp ? "150px" : "",
-          backgroundColor: "#ffffff",
+          backgroundColor: Palette.main,
         }}
         toggleSidebar={() => setSidebarOpen(!isSidebarOpen)}
         toggleMobileSidebar={() => setMobileSidebarOpen(true)}
+        setLogin={setLogin}
       />
 
       {/*
@@ -60,6 +62,7 @@ const FullLayout = () => {
           maxWidth={false}
           sx={{
             paddingTop: "20px",
+            
           }}
         >
           <Box sx={{ minHeight: "calc(100vh - 170px)" }}>

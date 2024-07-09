@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-
+import { Palette } from "../../components/palette/Palette";
 import axios from 'axios';
 import {
   Typography,
@@ -33,7 +33,12 @@ const StockTable = () => {
     const storeNo = localStorage.getItem('storeNo');
     console.log(storeNo);
     try {
-      const response = await axios.get(`http://localhost:9001/stock?storeNo=${storeNo}`);
+      const config = {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      };
+      const response = await axios.get(`http://localhost:9001/stock?storeNo=${storeNo}`, config);
       const stockLIst = response.data.data.stockList;
       setStockLIst(stockLIst);
     } catch (error) {
@@ -61,6 +66,7 @@ const StockTable = () => {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
       },
       body: JSON.stringify({
         state: state,
@@ -102,6 +108,7 @@ const StockTable = () => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
       },
       body: JSON.stringify({
         quantity: poQuantity,
@@ -206,110 +213,142 @@ const StockTable = () => {
                 발주량
               </Typography>
             </TableCell>
-            <TableCell align="right">
+            <TableCell>
+              <Typography color="textSecondary" variant="h6">
+                공급가
+              </Typography>
+            </TableCell>
+            <TableCell >
               <Typography color="textSecondary" variant="h6">
                 최근 입고 날짜
               </Typography>
             </TableCell>
-            <TableCell align="right">
+            <TableCell >
               <Typography color="textSecondary" variant="h6">
                 관리
               </Typography>
             </TableCell>
           </TableRow>
         </TableHead>
-        <TableBody>
-          {stockList && stockList.map((stock, index) => (
-            <TableRow key={stock.stockNo}>
-              <TableCell>
-                <Typography
-                  sx={{
-                    fontSize: "15px",
-                    fontWeight: "500",
-                  }}
-                >
-                  {index + 1}
-                </Typography>
-              </TableCell>
 
-              <TableCell>
-                <Typography color="textSecondary" variant="h6">
-                  {stock.menuName}
-                </Typography>
-              </TableCell>
-              <TableCell>
-                <Chip
-                  sx={{
-                    pl: "4px",
-                    pr: "4px",
-                    color: "#fff",
-                    cursor: "pointer",
-                  }}
-                  size="small"
-                  label={stock.quantity}
-                  onClick={() => handleClickOpenQuantityDialog(stock)}
-                ></Chip>
-              </TableCell>
-              <TableCell>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                  }}
-                >
-                  <Box>
-                    <Typography
-                      variant="h6"
-                      sx={{
-                        fontWeight: "600",
-                      }}
-                    >
-                      <Chip
+
+        {stockList ? (
+          <TableBody>
+            {stockList && stockList.map((stock, index) => (
+              <TableRow key={stock.stockNo}>
+                <TableCell>
+                  <Typography
+                    sx={{
+                      fontSize: "15px",
+                      fontWeight: "500",
+                    }}
+                  >
+                    {index + 1}
+                  </Typography>
+                </TableCell>
+
+                <TableCell>
+                  <Typography color="textSecondary" variant="h6">
+                    {stock.menuName}
+                  </Typography>
+                </TableCell>
+                <TableCell>
+                  <Chip
+                    sx={{
+                      pl: "4px",
+                      pr: "4px",
+                      color:  Palette.sub,
+                      // cursor: "pointer",
+                      backgroundColor: Palette.main
+                    }}
+                    size="small"
+                    label={stock.quantity === 0?'재고 없음' : stock.quantity}
+                    // onClick={() => handleClickOpenQuantityDialog(stock)}
+                  ></Chip>
+                </TableCell>
+                <TableCell>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Box>
+                      <Typography
+                        variant="h6"
                         sx={{
-                          pl: "4px",
-                          pr: "4px",
-                          color: "#fff",
-                          cursor: stock.poNo? 'default' : 'pointer',
+                          fontWeight: "600",
                         }}
-                        size="small"
-                        label={stock.poQuantity}
+                        >
 
-                      ></Chip>
-                    </Typography>
-                    <Typography
-                      color="textSecondary"
-                      sx={{
-                        fontSize: "13px",
-                      }}
-                    >
-                      {stock.poPrice}
-                    </Typography>
+                        <Chip
+                          sx={{
+                            pl: "4px",
+                            pr: "4px",
+                            color:  Palette.sub,
+                            backgroundColor: Palette.main
+                          }}
+                          size="small"
+                          label={stock.poQuantity?stock.poQuantity : '발주 없음'}
+
+                        ></Chip>
+
+
+                      </Typography>
+                      <Typography
+                        color="textSecondary"
+                        sx={{
+                          fontSize: "13px",
+                        }}
+                      >
+                        {stock.poPrice?'총 ' + stock.poPrice +'원': ''}
+                      </Typography>
+                    </Box>
                   </Box>
-                </Box>
-              </TableCell>
-              <TableCell align="right">
-                <Typography variant="h6">{stock.lastStockDate}</Typography>
-              </TableCell>
-              <TableCell align="right">
-                <Grid
-                  item
-                  xs={12}
-                  sx={{ display: "flex", justifyContent: "flex-end", alignItems: "flex-end", mt: 2 }}
-                >
-                  {stock.poNo ? (
-                    <Button variant="contained" color="primary" onClick={() => orderCompleteClick(stock.poNo)}>
-                      입고완료
-                    </Button>
-                  ) : (
-                    <Button variant="contained" color="primary" onClick={() => handleClickOpenPoDialog(stock)}>
-                      발주신청
-                    </Button>
-                  )}
-                </Grid>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
+                </TableCell>
+                <TableCell >
+                  <Typography variant="h6">{stock.supplyPrice}원</Typography>
+                </TableCell>
+                <TableCell >
+                  <Typography variant="h6">{stock.lastStockDate}</Typography>
+                </TableCell>
+                <TableCell >
+                  <Grid
+                    item
+                    xs={12}
+                    sx={{ display: "flex", justifyContent: "flex-end", alignItems: "flex-end", mt: 2 }}
+                  >
+                    {stock.poNo ? (
+                      <Button variant="contained" sx={{
+                        color: Palette.sub,
+                        background: Palette.main,
+                        '&:hover': {
+                          color: Palette.sub,
+                          background: Palette.dark, // 마우스 호버 시 변경할 색상 지정
+                        },
+                      }} onClick={() => orderCompleteClick(stock.poNo)}>
+                        입고완료
+                      </Button>
+                    ) : (
+                      <Button variant="contained" 
+                       sx={{
+                        color: Palette.sub,
+                        background: Palette.main,
+                        '&:hover': {
+                          color: Palette.sub,
+                          background: Palette.dark, // 마우스 호버 시 변경할 색상 지정
+                        },
+                      }}
+                      onClick={() => handleClickOpenPoDialog(stock)}>
+                        발주신청
+                      </Button>
+                    )}
+                  </Grid>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        ) : ('등록된 재고가 없습니다.')}
       </Table>
 
       <Dialog open={openPoDialog} onClose={handleClosePoDialog}>
@@ -335,10 +374,28 @@ const StockTable = () => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClosePoDialog} color="primary">
+          <Button 
+             sx={{
+              color: Palette.sub,
+              background: Palette.main,
+              '&:hover': {
+                color: Palette.sub,
+                background: Palette.dark, // 마우스 호버 시 변경할 색상 지정
+              },
+            }}
+          onClick={handleClosePoDialog} color="primary">
             취소
           </Button>
-          <Button onClick={handleSavePoQuantity} color="primary">
+          <Button
+             sx={{
+              color: Palette.sub,
+              background: Palette.main,
+              '&:hover': {
+                color: Palette.sub,
+                background: Palette.dark, // 마우스 호버 시 변경할 색상 지정
+              },
+            }}
+          onClick={handleSavePoQuantity} color="primary">
             신청
           </Button>
         </DialogActions>

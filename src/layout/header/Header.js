@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-//import { Link } from 'react-router-dom';
-
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
 import PersonAddOutlinedIcon from '@mui/icons-material/PersonAddOutlined';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
-
+import LogoIcon from "../Logo/LogoIcon";
+import userimg from "../../assets/images/users/user.jpg";
+import { Link , useNavigate  } from "react-router-dom";
+import { Palette } from '../../components/palette/Palette';
+import { usePopup } from "../../components/popup/PopupContext";
 import {
   AppBar,
   Box,
@@ -19,10 +21,6 @@ import {
   Typography,
   ListItemIcon,
 } from "@mui/material";
-import { Link } from "react-router-dom";
-import LogoIcon from "../Logo/LogoIcon";
-
-import userimg from "../../assets/images/users/user.jpg";
 
 const Header = (props) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -33,6 +31,7 @@ const Header = (props) => {
     date: '',
     time: ''
   });
+  const { openPopup } = usePopup();
 
   useEffect(()=>{
     setStoreName(localStorage.getItem('storeName'));
@@ -57,12 +56,19 @@ const Header = (props) => {
   const handleClose4 = () => {
     setAnchorEl4(null);
   };
-
+  
+  const navigate = useNavigate();
   const LogoutClick = () => {
-    localStorage.clear();
-    console.log(localStorage.length);
-    props.setLogin('inactive');
+
+    openPopup('로그아웃 하시겠습니까?', logout);
+   
   };
+
+  const logout = () =>{
+    localStorage.clear();
+    props.setLogin(false);
+    navigate('./'); 
+  }
 
   // 5
   const [anchorEl5, setAnchorEl5] = React.useState(null);
@@ -105,7 +111,7 @@ const Header = (props) => {
     <AppBar sx={props.sx} elevation={0} className={props.customClass}>
       <Toolbar>
       <Link to="/">
-        <Box sx={{ display: "flex", alignItems: "Center" }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '10vh' , padding:1}}>
           <LogoIcon />
         </Box>
       </Link>
@@ -178,33 +184,25 @@ const Header = (props) => {
         {/* Notifications Dropdown */}
         {/* ------------------------------------------- */}
         <Box sx={{display:"flex", fontSize:15}}>
-          <Typography sx={{pr:2, color:"black"}}>
+          <Typography sx={{pr:2, color:Palette.sub}}>
             매장명 : {storeName}
           </Typography>
-          <Typography sx={{pr:2, color:"black"}}>
+          <Typography sx={{pr:2, color:Palette.sub}}>
             판매자 : {sellerName}
           </Typography>
-          <Typography sx={{pr:20, color:"black"}}>
+          <Typography sx={{pr:20, color:Palette.sub}}>
             매장번호 : {posNumber}
           </Typography>
         </Box>
         <Box sx={{display:"flex", fontSize:15}}>
-          <Typography sx={{pr:2, color:"black"}}>
+          <Typography sx={{pr:2, color:Palette.sub}}>
             {currentTime.date} 
           </Typography>
-          <Typography sx={{pr:2, color:"black"}}>
+          <Typography sx={{pr:2, color:Palette.sub}}>
             {currentTime.time}
           </Typography>
         </Box>
-        <IconButton
-          aria-label="menu"
-          color="inherit"
-          aria-controls="notification-menu"
-          aria-haspopup="true"
-          onClick={handleClick}
-        >
-          <NotificationsNoneOutlinedIcon width="20" height="20" />
-        </IconButton>
+        
         <Menu
           id="notification-menu"
           anchorEl={anchorEl}
@@ -278,34 +276,7 @@ const Header = (props) => {
             },
           }}
         >
-          <MenuItem onClick={handleClose4}>
-            <Avatar
-              sx={{
-                width: "35px",
-                height: "35px",
-              }}
-            />
-            <Box
-              sx={{
-                ml: 2,
-              }}
-            >
-              My account
-            </Box>
-          </MenuItem>
-          <Divider />
-          <MenuItem onClick={handleClose4}>
-            <ListItemIcon>
-              <PersonAddOutlinedIcon fontSize="small" />
-            </ListItemIcon>
-            Add another account
-          </MenuItem>
-          <MenuItem onClick={handleClose4}>
-            <ListItemIcon>
-              <SettingsOutlinedIcon fontSize="small" />
-            </ListItemIcon>
-            Settings
-          </MenuItem>
+          
           <MenuItem onClick={LogoutClick}>
             <ListItemIcon>
               <LogoutOutlinedIcon fontSize="small" />

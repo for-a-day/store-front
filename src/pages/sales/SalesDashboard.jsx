@@ -13,7 +13,12 @@ const SalesDashboard = () => {
 
     console.log(storeNo);
     try {
-      const response = await axios.get(`http://localhost:9001/sales?storeNo=${storeNo}`);
+      const config = {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      };
+      const response = await axios.get(`http://localhost:9001/sales?storeNo=${storeNo}`, config);
       const salesDetail = response.data.data.salesDetail;
       console.log(response.data.data);
       console.log(salesDetail);

@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import MenuCard from '../../components/BaseCard/MenuCard';
 import { getTableList, getOrderList } from './OrderService';
-import { Link as RouterLink, NavLink } from "react-router-dom";
 import {
   Box,
   ListItemText,
   Button,
   Grid,
 } from "@mui/material";
+import { Palette } from '../../components/palette/Palette';
 
 const OrderList = ({ nowTable, setNow , reload, setTableName}) => {
 
@@ -47,21 +47,21 @@ const OrderList = ({ nowTable, setNow , reload, setTableName}) => {
         {tables && tables.map((item) => {
           const tableOrders = orders.filter(order => order.tableNo === item.tableNo);
           const totalAmount = tableOrders.reduce((sum, order) => sum + order.amount, 0);
-          // console.log("주문 내역 : ", tableOrders);
+          console.log("주문 내역 : ", tableOrders);
 
           return (
-            <Grid item key={item.tableNo} xs={12} sm={6} md={4} lg={3}>
-              <MenuCard title={item.tableName}>
+            <Grid item key={item.tableNo} xs={12} sm={6} md={4} lg={4}
+            >
+              <MenuCard title={item.tableName}
+                background={nowTable === item.tableNo? Palette.main: 'white'}
+                color={nowTable === item.tableNo? Palette.sub: 'black'}
+              >
                 <Box
                   sx={{
                     textAlign: 'center',
                     cursor: 'pointer',
-                    width: 100,
-                    height: 100,
-                    ...(nowTable === item.tableNo && {
-                      color: 'white',
-                      backgroundColor: (theme) => `${theme.palette.primary.main}!important`,
-                    }),
+                    minwidth: 120,
+                    minHeight: 100,
                   }}
                   onClick={() => handleClick(item.tableNo, item.tableName)}
                 >
@@ -72,17 +72,32 @@ const OrderList = ({ nowTable, setNow , reload, setTableName}) => {
                        {tableOrders.map(order => (
                          <div key={order.orderNo}>
                            {order.orderMenuList.map(menu => (
-                             <div key={menu.menuNo} style={{ display: 'flex', justifyContent: 'space-between' }}>
-                               <span>{menu.menuName}</span>
-                               <span>{menu.quantity}</span>
-                             </div>
+                             <div key={menu.menuNo} style={{
+                              display: 'flex',
+                              justifyContent: 'space-between',
+                            }}>
+                              <div style={{
+                                flex: '1',              // menuName이 가능한 공간을 최대한 차지
+                                whiteSpace: 'nowrap',   // 텍스트가 넘칠 때 줄바꿈을 막음
+                                overflow: 'hidden',     // 넘친 텍스트를 숨김
+                                textOverflow: 'ellipsis' // 넘친 텍스트에 ...으로 표시
+                              }}>
+                                {menu.menuName}
+                              </div>
+                              <span style={{
+                                marginLeft: '10px'  // 적절한 간격 설정
+                              }}>
+                                x{menu.quantity}
+                              </span>
+                            </div>
+                            
                            ))}
                          </div>
                        ))}
                      </div>
-                     <div style={{ marginTop: '1rem' }}>{totalAmount === 0?'':totalAmount}</div>
+                     <div style={{ marginTop: '1rem' }}>{totalAmount === 0?'':totalAmount +' 원'}</div>
                    </ListItemText>
-                  ):(null)}
+                  ):'테이블을 등록해 주세요'}
 
 
                 </Box>
@@ -93,18 +108,7 @@ const OrderList = ({ nowTable, setNow , reload, setTableName}) => {
       </Grid>
 
       
-      <Grid
-        item
-        xs={12}
-        sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-end', mt: 2 }}
-      >
-        <Button variant="contained" color="primary"
-        component={NavLink}
-        to='../payment'
-        >
-          영수증 관리
-        </Button>
-      </Grid>
+     
 
       
     </Box>

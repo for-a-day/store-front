@@ -1,6 +1,6 @@
 import './App.css';
 import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Main from './pages/main/Main';
 import Table from './pages/table/Table';
 import Stock from './pages/stock/Stock';
@@ -11,18 +11,22 @@ import Payment from './pages/order/Payment';
 import { ThemeProvider } from '@mui/material/styles';
 import { baseTheme } from './assets/global/Theme-variable';
 import FullLayout from './layout/FullLayout';
+import { PopupProvider  } from "./components/popup/PopupContext";
 
 function App() {
   const theme = baseTheme;
 
   const [login, setLogin] = useState('inactive');
 
+  useEffect(() => {setLogin(localStorage.getItem('token'))}, [login]);
+
   return (
     <>
       <BrowserRouter>
         <ThemeProvider theme={theme}>
+        <PopupProvider>
           <Routes>
-            {!localStorage.getItem('storeNo') ? (
+            {!login ? (
               <Route path='/' element={<Login setLogin={setLogin}/>} />
             ) : (
               <Route path='/' element={<FullLayout setLogin={setLogin}/>}>
@@ -35,6 +39,7 @@ function App() {
             </Route>
             )}
           </Routes>
+          </PopupProvider>
         </ThemeProvider>
       </BrowserRouter>
     </>

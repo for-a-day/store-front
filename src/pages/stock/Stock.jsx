@@ -7,7 +7,7 @@ import StockTable from './StockTable';
 const Stock = () => {
   return (
     <div>
-      <Box>
+      <Box sx={{ mt: 5 }}>
         <Card variant="outlined">
           <CardContent>
             <Typography variant="h3">재고 관리</Typography>
@@ -20,15 +20,6 @@ const Stock = () => {
               }}
             >
               <StockTable />
-
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  height: '100vh',
-                }}
-              ></div>
             </Box>
           </CardContent>
         </Card>

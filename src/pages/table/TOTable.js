@@ -17,7 +17,12 @@ const TOTable = () => {
     const storeNo = localStorage.getItem('storeNo');
     console.log(storeNo);
     try {
-      const response = await axios.get(`http://localhost:9001/table?storeNo=${storeNo}`);
+      const config = {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      };
+      const response = await axios.get(`http://localhost:9001/table?storeNo=${storeNo}`, config);
       const tableList = response.data.data.tableList;
 
       if (tableList) {
@@ -77,39 +82,45 @@ const TOTable = () => {
             </TableCell>
           </TableRow>
         </TableHead>
-        <TableBody>
-          {tableList && tableList.map((table) => (
-            <TableRow key={table.tableCode}>
-              <TableCell>
-                <Typography
-                  sx={{
-                    fontSize: "15px",
-                    fontWeight: "500",
-                  }}
-                >
-                  {table.tableNumber}
-                </Typography>
-              </TableCell>
 
-              <TableCell>
-                <Typography color="textSecondary" variant="h6">
-                  {table.tableName}
-                </Typography>
-              </TableCell>
-              <TableCell>
-                <Typography color="textSecondary" variant="h6">
-                  {table.tableCode}
-                </Typography>
-              </TableCell>
-              <TableCell >
-                <Typography variant="h6">{formatDate(table.registerDate)}</Typography>
-              </TableCell>
-              <TableCell >
-                <Typography variant="h6">{table.state === 1 ? '등록됨' : '등록대기중'}</Typography>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
+          {tableList?(
+            <TableBody>
+             {tableList.map((table) => (
+                <TableRow key={table.tableCode}>
+                  <TableCell>
+                    <Typography
+                      sx={{
+                        fontSize: "15px",
+                        fontWeight: "500",
+                      }}
+                    >
+                      {table.tableNumber}
+                    </Typography>
+                  </TableCell>
+
+                  <TableCell>
+                    <Typography color="textSecondary" variant="h6">
+                      {table.tableName}
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography color="textSecondary" variant="h6">
+                      {table.tableCode}
+                    </Typography>
+                  </TableCell>
+                  <TableCell >
+                    <Typography variant="h6">{formatDate(table.registerDate)}</Typography>
+                  </TableCell>
+                  <TableCell >
+                    <Typography variant="h6">{table.state === 1 ? '등록됨' : '등록대기중'}</Typography>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+
+          ) : ('등록된 테이블이 없습니다.')}
+
+          
       </Table>
     </>
   );

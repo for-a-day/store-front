@@ -15,7 +15,7 @@ const Order = () => {
 
   return (
     <>
-      <Grid container spacing={2}>
+      <Grid container spacing={2} sx={{ mt: 1 }}>
         {/* 주문 목록 */}
         <Grid item xs={5}>
           <OrderList
@@ -31,11 +31,9 @@ const Order = () => {
         </Grid>
         {/* 상세보기 */}
 
-        {nowTable > 0 ? (
-          <Grid item xs={6}>
-            <OrderDetail nowTable={nowTable} loading={loading} nowTableName={nowTableName} />
-          </Grid>
-        ) : null}
+        <Grid item xs={6}>
+          <OrderDetail nowTable={nowTable} loading={loading} nowTableName={nowTableName} />
+        </Grid>
       </Grid>
     </>
   );
