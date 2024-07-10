@@ -45,35 +45,6 @@ const Login = ({ setLogin }) => {
     } catch (error) {
       alert('로그인 실패');
     }
-
-    // fetch('http://localhost:9001/login', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify({
-    //     rprName: rprName,
-    //     storeCode: storeCode,
-    //   }),
-    // })
-    //   .then((response) => {
-    //     if (response.status !== 200) {
-    //       throw new Error('서버 응답 오류');
-    //     }
-    //     return response.json();
-    //   })
-    //   .then((data) => {
-    //     console.log(data);
-    //     setLogin('active');
-    //     localStorage.setItem('storeNo', data.data.storeInfo.storeNo);
-    //     localStorage.setItem('storeName', data.data.storeInfo.storeName);
-    //     localStorage.setItem('rprName', data.data.storeInfo.rprName);
-    //     localStorage.setItem('warningCount', data.data.storeInfo.warningCount);
-    //     localStorage.setItem('storeCode', data.data.storeInfo.storeCode);
-    //   })
-    //   .catch((error) => {
-    //     console.error('로그인 실패:', error.message);
-    //   });
   };
 
   return (

@@ -12,7 +12,7 @@ const Payment = () => {
 
   return (
     <div>
-      <Box>
+      <Box sx={{ mt: 5 }}>
         <Card variant="outlined">
           <CardContent>
             <Typography variant="h3">영수증 조회</Typography>

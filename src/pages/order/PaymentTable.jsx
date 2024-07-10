@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import MenuCard from '../../components/BaseCard/MenuCard';
 import { getTableList, getPaymentList, deletePayment } from './OrderService';
 import axios from 'axios';
+import { Palette } from '../../components/palette/Palette';
 import {
   Typography,
   Box,
@@ -146,7 +147,19 @@ const PaymentTable = () => {
                   <Typography variant="h6">{payment.tableNumber}</Typography>
                 </TableCell>
                 <TableCell>
-                  <Button variant="contained" color="primary">
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    sx={{
+                      color: Palette.sub,
+                      background: Palette.main,
+                      '&:hover': {
+                        color: Palette.sub,
+                        background: Palette.dark, // 마우스 호버 시 변경할 색상 지정
+                      },
+                      marginLeft: 'auto', // 추가된 부분
+                    }}
+                  >
                     재출력
                   </Button>
                 </TableCell>
@@ -154,6 +167,15 @@ const PaymentTable = () => {
                   <Button
                     variant="contained"
                     color="primary"
+                    sx={{
+                      color: Palette.sub,
+                      background: Palette.main,
+                      '&:hover': {
+                        color: Palette.sub,
+                        background: Palette.dark, // 마우스 호버 시 변경할 색상 지정
+                      },
+                      marginLeft: 'auto', // 추가된 부분
+                    }}
                     disabled={payment.state === 99}
                     onClick={() => handleClickOpenDialog(payment)}
                   >

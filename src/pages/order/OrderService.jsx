@@ -1,5 +1,7 @@
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
+import SockJS from 'sockjs-client';
+import { Stomp } from '@stomp/stompjs';
 
 export const getOrderList = async (storeNo) => {
   // const navigate = useNavigate();
@@ -132,4 +134,23 @@ export const orderComplete = async (tableNo) => {
     .catch((error) => {
       console.error('손님 나감 처리 실패:', error.message);
     });
+};
+
+export const orderSocket = () => {
+  const socket = new SockJS('http://localhost:9001/ws');
+  const stompClient = Stomp.over(socket);
+  const storeNo = localStorage.getItem('storeNo');
+
+  stompClient.connect({}, () => {
+    const topic = `/topic/orders/${storeNo}`;
+    stompClient.subscribe(topic, (message) => {
+      const newOrder = JSON.parse(message.body);
+      // setOrders((prevOrders) => [...prevOrders, newOrder]);
+      return newOrder;
+    });
+  });
+
+  return () => {
+    stompClient.disconnect();
+  };
 };

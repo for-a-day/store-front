@@ -6,7 +6,7 @@ import TOTable from './TOTable';
 const Table = () => {
   return (
     <div>
-      <Box sx={{ mt: 5 }}>
+      <Box sx={{ mt: 5, mb: 10 }}>
         <Card variant="outlined">
           <CardContent>
             <Typography variant="h3">테이블 조회</Typography>
