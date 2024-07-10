@@ -4,8 +4,8 @@ import { getTableList, getOrderList } from './OrderService';
 import {
   Box,
   ListItemText,
-  Button,
   Grid,
+  Typography
 } from "@mui/material";
 import { Palette } from '../../components/palette/Palette';
 
@@ -51,22 +51,26 @@ const OrderList = ({ nowTable, setNow , reload, setTableName}) => {
 
           return (
             <Grid item key={item.tableNo} xs={12} sm={6} md={4} lg={4}
+            style={{
+              minWidth: '180px', 
+              maxWidth: '180px',
+              maxHeight: '250px', 
+              minHeight: '250px',
+              }}
             >
+            {tableOrders? (
               <MenuCard title={item.tableName}
                 background={nowTable === item.tableNo? Palette.main: 'white'}
                 color={nowTable === item.tableNo? Palette.sub: 'black'}
-              >
-                <Box
+                onClick={() => handleClick(item.tableNo, item.tableName)}
+                children ={
+<Box
                   sx={{
                     textAlign: 'center',
                     cursor: 'pointer',
-                    minwidth: 120,
-                    minHeight: 100,
                   }}
-                  onClick={() => handleClick(item.tableNo, item.tableName)}
                 >
 
-                  {tableOrders? (
                      <ListItemText>
                      <div>
                        {tableOrders.map(order => (
@@ -77,15 +81,15 @@ const OrderList = ({ nowTable, setNow , reload, setTableName}) => {
                               justifyContent: 'space-between',
                             }}>
                               <div style={{
-                                flex: '1',              // menuName이 가능한 공간을 최대한 차지
-                                whiteSpace: 'nowrap',   // 텍스트가 넘칠 때 줄바꿈을 막음
-                                overflow: 'hidden',     // 넘친 텍스트를 숨김
-                                textOverflow: 'ellipsis' // 넘친 텍스트에 ...으로 표시
+                                flex: '1',              
+                                whiteSpace: 'nowrap',
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis'
                               }}>
                                 {menu.menuName}
                               </div>
                               <span style={{
-                                marginLeft: '10px'  // 적절한 간격 설정
+                                marginLeft: '10px'
                               }}>
                                 x{menu.quantity}
                               </span>
@@ -97,11 +101,21 @@ const OrderList = ({ nowTable, setNow , reload, setTableName}) => {
                      </div>
                      <div style={{ marginTop: '1rem' }}>{totalAmount === 0?'':totalAmount +' 원'}</div>
                    </ListItemText>
-                  ):'테이블을 등록해 주세요'}
-
-
                 </Box>
-              </MenuCard>
+
+                }
+
+              />
+                  ):
+                  
+                  <Typography
+                  sx={{
+                    fontSize: "18px",
+                    fontWeight: "600",
+                  }}
+                >
+                  테이블을 등록해 주세요
+                </Typography>}
             </Grid>
           );
         })}

@@ -59,9 +59,7 @@ const OrderDetail = ({ nowTable, loading, nowTableName }) => {
         <Card variant="outlined">
           <Box sx={{ padding: '15px 30px' }}>
             <Typography sx={{ fontSize: '18px', fontWeight: '500' }}>
-              <Typography variant="body1">
-                {nowTable ? nowTableName : '선택된 테이블이 없습니다'}
-              </Typography>
+              {nowTable ? nowTableName : '테이블을 선택해 주세요'}
             </Typography>
           </Box>
           <Divider />
