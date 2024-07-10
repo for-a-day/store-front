@@ -127,7 +127,7 @@ const Login = ({ setLogin }) => {
                     background: Palette.main,
                     '&:hover': {
                       color: Palette.sub,
-                      background: Palette.dark, // 마우스 호버 시 변경할 색상 지정
+                      background: Palette.dark,
                     },
                   }}
                 >

@@ -1,5 +1,4 @@
 import React from "react";
-import {Palette} from "../palette/Palette"
 
 import {
   Card,

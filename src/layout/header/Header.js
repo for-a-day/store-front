@@ -60,7 +60,7 @@ const Header = (props) => {
   const navigate = useNavigate();
   const LogoutClick = () => {
 
-    openPopup('로그아웃 하시겠습니까?', logout);
+    openPopup('로그아웃 하시겠습니까?', logout, true);
    
   };
 
@@ -183,6 +183,9 @@ const Header = (props) => {
         {/* ------------------------------------------- */}
         {/* Notifications Dropdown */}
         {/* ------------------------------------------- */}
+        
+        
+        {localStorage.getItem('token')?
         <Box sx={{display:"flex", fontSize:15}}>
           <Typography sx={{pr:2, color:Palette.sub}}>
             매장명 : {storeName}
@@ -194,6 +197,9 @@ const Header = (props) => {
             매장번호 : {posNumber}
           </Typography>
         </Box>
+
+        : null}
+
         <Box sx={{display:"flex", fontSize:15}}>
           <Typography sx={{pr:2, color:Palette.sub}}>
             {currentTime.date} 
@@ -237,7 +243,7 @@ const Header = (props) => {
             ml: 1,
           }}
         ></Box>
-        <Button
+        {localStorage.getItem('token')? <Button
           aria-label="menu"
           color="inherit"
           aria-controls="profile-menu"
@@ -259,7 +265,12 @@ const Header = (props) => {
               }}
             />
           </Box>
-        </Button>
+
+
+        </Button>: null}
+        
+
+
         <Menu
           id="profile-menu"
           anchorEl={anchorEl4}
