@@ -4,7 +4,7 @@ import PersonAddOutlinedIcon from '@mui/icons-material/PersonAddOutlined';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import LogoIcon from "../Logo/LogoIcon";
-import userimg from "../../assets/images/users/user.jpg";
+import userimg from "../../assets/images/users/profile.png";
 import { Link , useNavigate  } from "react-router-dom";
 import { Palette } from '../../components/palette/Palette';
 import { usePopup } from "../../components/popup/PopupContext";
