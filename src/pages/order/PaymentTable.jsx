@@ -44,7 +44,10 @@ const PaymentTable = () => {
     console.log('환불 확인 버튼 눌림');
     try {
       const response = await deletePayment(orderNo);
-      if (response != 'error') reloading();
+      if (response != 'error') {
+        setOpenDialog(false);
+      reloading();
+      }
     } catch (error) {}
     // setOpenDialog(false);
   };
@@ -191,7 +194,7 @@ const PaymentTable = () => {
       </Table>
 
       <Dialog open={openDialog} onClose={handleCloseDialog}>
-        <DialogTitle>환불</DialogTitle>
+        <DialogTitle>환불처리 하시겠습니까?</DialogTitle>
         <DialogContent>
           <DialogContentText>
             영수증번호 : {selectedPayment ? selectedPayment.orderNo : ''}

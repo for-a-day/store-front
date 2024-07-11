@@ -18,7 +18,7 @@ import {
 import { getOrderDetail, orderComplete } from './OrderService';
 import { Palette } from '../../components/palette/Palette';
 
-const OrderDetail = ({ nowTable, loading, nowTableName }) => {
+const OrderDetail = ({ nowTable, loading, nowTableName, reload, setNowTable }) => {
   const [order, setOrder] = useState();
   const [totalAmount, setTotalAmount] = useState(0);
 
@@ -34,17 +34,17 @@ const OrderDetail = ({ nowTable, loading, nowTableName }) => {
       } catch (error) {}
     };
     fetchOrderDetail();
-    console.log('들어와야해애');
-  }, [nowTableName]);
+  }, [nowTableName, reload]);
 
   const clickClear = async () => {
     try {
       const response = await orderComplete(order.tableNo);
       if (response != 'error') {
         setOpenDialog(false);
-        loading();
       }
-    } catch (error) {}
+      loading();
+    } catch (error) {
+      loading();}
   };
 
   const [openDialog, setOpenDialog] = useState(false);

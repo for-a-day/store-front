@@ -32,7 +32,8 @@ const Order = () => {
         {/* 상세보기 */}
 
         <Grid item xs={6}>
-          <OrderDetail nowTable={nowTable} loading={loading} nowTableName={nowTableName} />
+          <OrderDetail nowTable={nowTable} loading={loading} nowTableName={nowTableName}
+            reload={reload}setNowTable={setNowTable} />
         </Grid>
       </Grid>
     </>
