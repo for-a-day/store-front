@@ -1,15 +1,8 @@
-import React, { useState, useEffect } from 'react';
-
+import React from 'react';
 import { Card, CardContent, Box, Typography } from '@mui/material';
-
-import OrderList from './OrderList';
 import PaymentTable from './PaymentTable';
 
 const Payment = () => {
-  const [nowTable, setNowTable] = useState([-1]);
-
-  const [onDetailPage, setOnDetailPage] = useState(false);
-
   return (
     <div>
       <Box sx={{ mt: 5 }}>

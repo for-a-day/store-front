@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { Palette } from "../../components/palette/Palette";
 import { usePopup } from "../../components/popup/PopupContext";
-import { orderSocket } from "../order/OrderService";
+// import { orderSocket } from "../order/OrderService";
 
 const TOTable = () => {
   const [tableList, setTableList] = useState([]);
@@ -19,24 +19,22 @@ const TOTable = () => {
   const[storeNo, setStoreNo] = useState(0);
 
   useEffect(() => {
-    setStoreNo(localStorage.getItem('storeNo'));
+    const userData = sessionStorage.getItem('user');
+
+    const storeNo = JSON.parse(userData).storeNo;
+    setStoreNo(storeNo);
     // const response = orderSocket();
     // console.log(response);
     // setOrders((prevOrders) => [...prevOrders, newOrder]);
   }, []);
 
-  const createTable= ()=>{
-
-    openPopup(
-      `테이블 코드가 생성되었습니다
-      ATB002`
-      ,()=>{} ,true);
-  }
+  useEffect(()=>{}, []);
 
   
   const [openQuantityDialog, setOpenQuantityDialog] = useState(false);
 
   const [tableCode, setTableCode] = useState('');
+  const [newTable, setNewTable] = useState('');
 
   const handleClickOpenQuantityDialog = async () => {
 
@@ -44,10 +42,13 @@ const TOTable = () => {
   // 서버에 데이터 전송
   
   try {
+    const userData = sessionStorage.getItem('user');
+
+    const token = JSON.parse(userData).token;
     const response = await fetch("http://localhost:9001/table", {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${localStorage.getItem('token')}`,
+        "Authorization": `Bearer ${token}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -55,8 +56,9 @@ const TOTable = () => {
       }),
     });
 
-    if (!response.ok) {
-      throw new Error("서버 응답 오류");
+    if (response.status !== 200) {
+      alert("서버 응답 오류");
+      return "error";
     }
 
     const result = await response.json(); // 응답을 JSON으로 파싱
@@ -69,7 +71,7 @@ const TOTable = () => {
     // 서버가 응답을 반환했을 때
     console.error(`Error Status: ${error.response.status}`);
     console.error(`Error Data: ${JSON.stringify(error.response.data)}`);
-    if (error.response.status === 403) {
+    if (error.response.status === 403 || error.response.status === 401) {
       alert('권한이 없습니다.');
     } else {
       alert('테이블 생성 실패하였습니다.');
@@ -87,6 +89,8 @@ const TOTable = () => {
 };
 
   const handleCloseQuantityDialog = async() => {
+
+    setNewTable(tableCode);
     setOpenQuantityDialog(false);
   };
 
@@ -94,10 +98,13 @@ const TOTable = () => {
   const cancleCreateTable = async() => {
     setOpenQuantityDialog(false);
     try {
+      const userData = sessionStorage.getItem('user');
+  
+      const token = JSON.parse(userData).token;
       const response = await fetch("http://localhost:9001/table", {
         method: "DELETE",
         headers: {
-          "Authorization": `Bearer ${localStorage.getItem('token')}`,
+          "Authorization": `Bearer ${token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
@@ -105,10 +112,10 @@ const TOTable = () => {
         }),
       });
   
-      if (!response.ok) {
-        throw new Error("서버 응답 오류");
+      if (response.status !== 200) {
+        alert("서버 응답 오류");
+        return "error";
       }
-  
       setTableCode('');
 
     } catch (error) {
@@ -116,7 +123,7 @@ const TOTable = () => {
         // 서버가 응답을 반환했을 때
         console.error(`Error Status: ${error.response.status}`);
         console.error(`Error Data: ${JSON.stringify(error.response.data)}`);
-        if (error.response.status === 403) {
+        if (error.response.status === 403 || error.response.status === 401) {
           alert('권한이 없습니다.');
         } else {
           alert('테이블 생성 실패하였습니다.');
@@ -135,15 +142,25 @@ const TOTable = () => {
 
 
   const getTables = async () => {
-    const storeNo = localStorage.getItem('storeNo');
+    const userData = sessionStorage.getItem('user');
+
+    const storeNo = JSON.parse(userData).storeNo;
+    const token = JSON.parse(userData).token;
     console.log(storeNo);
     try {
       const config = {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          Authorization: `Bearer ${token}`,
         },
       };
       const response = await axios.get(`http://localhost:9001/table?storeNo=${storeNo}`, config);
+
+      if (response.status !== 200) {
+        alert("서버 응답 오류");
+        return "error";
+      }
+
+
       const tableList = response.data.data.tableList;
 
       if (tableList) {
@@ -152,12 +169,29 @@ const TOTable = () => {
 
       setTableList(tableList);
     } catch (error) {
-      console.error('Error get tables:', error);
-      throw error;
+      if (error.response) {
+        // 서버가 응답을 반환했을 때
+        console.error(`Error Status: ${error.response.status}`);
+        console.error(`Error Data: ${JSON.stringify(error.response.data)}`);
+        if (error.response.status === 403 || error.response.status === 401) {
+          alert('권한이 없습니다.');
+        } 
+        else {
+          alert('테이블 생성 실패하였습니다.');
+        }
+      } else if (error.request) {
+        // 요청이 서버에 도달하지 못했을 때
+        console.error('No response received from server');
+        alert('서버에 연결할 수 없습니다.');
+      } else {
+        // 요청을 설정하는 중에 오류가 발생했을 때
+        console.error(`Error Message: ${error.message}`);
+        alert('알 수 없는 오류가 발생하였습니다.');
+      }
     }
   }
 
-  useEffect(() => { getTables(); }, [tableCode]);
+  useEffect(() => { getTables(); }, [newTable]);
 
   const formatDate = (dateString) => {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };

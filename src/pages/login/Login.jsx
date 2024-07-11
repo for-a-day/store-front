@@ -30,15 +30,18 @@ const Login = ({ setLogin }) => {
         storeCode,
       });
       console.log(response.data.store);
-      // JWT 토큰을 로컬 스토리지에 저장
-      localStorage.setItem('token', response.data.accessToken);
-      localStorage.setItem('refreshToken', response.data.refreshToken);
+      // JWT 토큰을 세션에 저장
       const data = response.data.store;
-      localStorage.setItem('storeNo', data.storeNo);
-      localStorage.setItem('storeName', data.storeName);
-      localStorage.setItem('rprName', data.rprName);
-      localStorage.setItem('warningCount', data.warningCount);
-      localStorage.setItem('storeCode', data.storeCode);
+      const user = {
+        token: response.data.accessToken,
+        refreshToken: response.data.refreshToken,
+        storeNo: data.storeNo,
+        storeName: data.storeName,
+        rprName: data.rprName,
+        warningCount: data.warningCount,
+        storeCode: data.storeCode,
+      };
+      sessionStorage.setItem('user', JSON.stringify(user));
       // 로그인 성공 후 처리 (예: 리디렉션)
       alert('로그인 성공');
       setLogin(true);

@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import MenuCard from '../../components/BaseCard/MenuCard';
-import { getTableList, getPaymentList, deletePayment } from './OrderService';
-import axios from 'axios';
+import { getPaymentList, deletePayment } from './OrderService';
 import { Palette } from '../../components/palette/Palette';
 import {
   Typography,
@@ -30,8 +28,13 @@ const PaymentTable = () => {
   useEffect(() => {
     const fetchPayment = async () => {
       try {
-        const response = await getPaymentList(localStorage.getItem('storeNo'));
-        setPaymentList(response);
+        const userData = sessionStorage.getItem('user');
+
+        const storeNo = JSON.parse(userData).storeNo;
+        const response = await getPaymentList(storeNo);
+        if (response != 'error') {
+          setPaymentList(response);
+        }
       } catch (error) {}
     };
     fetchPayment();
@@ -40,10 +43,10 @@ const PaymentTable = () => {
   const clickRefund = async (orderNo) => {
     console.log('환불 확인 버튼 눌림');
     try {
-      await deletePayment(orderNo);
-      reloading();
+      const response = await deletePayment(orderNo);
+      if (response != 'error') reloading();
     } catch (error) {}
-    setOpenDialog(false);
+    // setOpenDialog(false);
   };
 
   const [selectedPayment, setSelectedPayment] = useState(null);

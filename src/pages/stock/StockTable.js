@@ -30,20 +30,47 @@ const StockTable = () => {
   }
 
   const getStocks = async () => {
-    const storeNo = localStorage.getItem('storeNo');
+    const userData = sessionStorage.getItem('user');
+
+    const storeNo = JSON.parse(userData).storeNo;
     console.log(storeNo);
+
+    const token = JSON.parse(userData).token;
     try {
       const config = {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          Authorization: `Bearer ${token}`,
         },
       };
       const response = await axios.get(`http://localhost:9001/stock?storeNo=${storeNo}`, config);
+
+      if (response.status !== 200) {
+        alert("서버 응답 오류");
+        return "error";
+      }
+
+
       const stockLIst = response.data.data.stockList;
       setStockLIst(stockLIst);
     } catch (error) {
-      console.error('Error get stocks:', error);
-      throw error;
+      if (error.response) {
+        // 서버가 응답을 반환했을 때
+        console.error(`Error Status: ${error.response.status}`);
+        console.error(`Error Data: ${JSON.stringify(error.response.data)}`);
+        if (error.response.status === 403 || error.response.status === 401) {
+          alert('권한이 없습니다.');
+        } else {
+          alert(' 재고 조회에 실패하였습니다.');
+        }
+      } else if (error.request) {
+        // 요청이 서버에 도달하지 못했을 때
+        console.error('No response received from server');
+        alert('서버에 연결할 수 없습니다.');
+      } else {
+        // 요청을 설정하는 중에 오류가 발생했을 때
+        console.error(`Error Message: ${error.message}`);
+        alert('알 수 없는 오류가 발생하였습니다.');
+      }
     }
   }
 
@@ -54,81 +81,141 @@ const StockTable = () => {
       purchaseOrderComplete(porderNo);
     } catch (error) {
       console.error('Error get orderComplete:', error);
-      throw error;
+      // throw error;
     }
 
   }
-  
   const purchaseOrderComplete = async (porderNo) => {
     const state = 1;
-
-    fetch('http://localhost:9001/purchaseorder', {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
-      body: JSON.stringify({
-        state: state,
-        porderNo: porderNo,
-      }),
-    })
-      .then((response) => {
-        if (response.status !== 200) {
-          throw new Error('서버 응답 오류');
-        }
-        return response.json();
-      })
-      .then((data) => {
-        stockReload();
-        console.log(data);
-      })
-      .catch((error) => {
-        console.error('입고 완료 실패:', error.message);
+    const userData = sessionStorage.getItem('user');
+    const token = JSON.parse(userData).token;
+  
+    try {
+      const response = await fetch('http://localhost:9001/purchaseorder', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          state: state,
+          porderNo: porderNo,
+        }),
       });
+  
+      if (response.status !== 200) {
+        alert('서버 응답 오류');
+        return 'error';
+      }
+  
+      const data = await response.json();
+      stockReload();
+      console.log(data);
+      return data;
+    } catch (error) {
+      if (error.response) {
+        // 서버가 응답을 반환했을 때
+        console.error(`Error Status: ${error.response.status}`);
+        console.error(`Error Data: ${JSON.stringify(error.response.data)}`);
+        if (error.response.status === 403 || error.response.status === 401) {
+          alert('권한이 없습니다.');
+        } else {
+          alert('입고완료 처리에 실패하였습니다.');
+        }
+      } else if (error.request) {
+        // 요청이 서버에 도달하지 못했을 때
+        console.error('No response received from server');
+        alert('서버에 연결할 수 없습니다.');
+      } else {
+        // 요청을 설정하는 중에 오류가 발생했을 때
+        console.error(`Error Message: ${error.message}`);
+        alert('알 수 없는 오류가 발생하였습니다.');
+      }
+      return 'error';
+    }
   };
-
+  
   
   const orderClick = () => {
     if(selectedStock){
         try {
           purchaseOrder();
         } catch (error) {
-          console.error('발주 실패 Error :', error);
+          if (error.response) {
+            // 서버가 응답을 반환했을 때
+            console.error(`Error Status: ${error.response.status}`);
+            console.error(`Error Data: ${JSON.stringify(error.response.data)}`);
+            if (error.response.status === 403 || error.response.status === 401) {
+              alert('권한이 없습니다.');
+            } else {
+              alert(' 발주 요청 실패하였습니다.');
+            }
+          } else if (error.request) {
+            // 요청이 서버에 도달하지 못했을 때
+            console.error('No response received from server');
+            alert('서버에 연결할 수 없습니다.');
+          } else {
+            // 요청을 설정하는 중에 오류가 발생했을 때
+            console.error(`Error Message: ${error.message}`);
+            alert('알 수 없는 오류가 발생하였습니다.');
+          }
           throw error;
         }
     }
     else{
-      console.error('발주 실패');
+      alert('선택된 재고가 없습니다.');
     }
   }
 
   const purchaseOrder = async () => {
-    fetch('http://localhost:9001/purchaseorder', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
-      body: JSON.stringify({
-        quantity: poQuantity,
-        stockNo: selectedStock.stockNo,
-      }),
-    })
-      .then((response) => {
-        if (response.status !== 200) {
-          throw new Error('서버 응답 오류');
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log(data);
-        stockReload();
-      })
-      .catch((error) => {
-        console.error('발주 신청 실패:', error.message);
+    const userData = sessionStorage.getItem('user');
+    const token = JSON.parse(userData).token;
+  
+    try {
+      const response = await fetch('http://localhost:9001/purchaseorder', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          quantity: poQuantity,
+          stockNo: selectedStock.stockNo,
+        }),
       });
+  
+      if (response.status !== 200) {
+        alert('서버 응답 오류');
+        return 'error';
+      }
+  
+      const data = await response.json();
+      console.log(data);
+      stockReload();
+      return data;
+    } catch (error) {
+      if (error.response) {
+        // 서버가 응답을 반환했을 때
+        console.error(`Error Status: ${error.response.status}`);
+        console.error(`Error Data: ${JSON.stringify(error.response.data)}`);
+        if (error.response.status === 403 || error.response.status === 401) {
+          alert('권한이 없습니다.');
+        } else {
+          alert('발주 신청 실패하였습니다.');
+        }
+      } else if (error.request) {
+        // 요청이 서버에 도달하지 못했을 때
+        console.error('No response received from server');
+        alert('서버에 연결할 수 없습니다.');
+      } else {
+        // 요청을 설정하는 중에 오류가 발생했을 때
+        console.error(`Error Message: ${error.message}`);
+        alert('알 수 없는 오류가 발생하였습니다.');
+      }
+      return 'error';
+    }
   };
+  
 
     
 

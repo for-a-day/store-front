@@ -26,9 +26,11 @@ const OrderDetail = ({ nowTable, loading, nowTableName }) => {
     const fetchOrderDetail = async () => {
       try {
         const response = await getOrderDetail(nowTable);
-        const total = response.orderList.reduce((sum, order) => sum + order.amount, 0);
-        setTotalAmount(total);
-        setOrder(response);
+        if (response != 'error') {
+          const total = response.orderList.reduce((sum, order) => sum + order.amount, 0);
+          setTotalAmount(total);
+          setOrder(response);
+        }
       } catch (error) {}
     };
     fetchOrderDetail();
@@ -38,8 +40,10 @@ const OrderDetail = ({ nowTable, loading, nowTableName }) => {
   const clickClear = async () => {
     try {
       const response = await orderComplete(order.tableNo);
-      setOpenDialog(false);
-      loading();
+      if (response != 'error') {
+        setOpenDialog(false);
+        loading();
+      }
     } catch (error) {}
   };
 
@@ -80,7 +84,19 @@ const OrderDetail = ({ nowTable, loading, nowTableName }) => {
                               <span> X {menu.quantity}</span>
                             </div>
                           ))}
-                        <div style={{ marginTop: '1rem' }}>가격 : {order.amount} 원</div>
+
+                        <div
+                          style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            paddingTop: 10,
+                          }}
+                        >
+                          <span>가격 : {order.amount} 원</span>
+                          <span> {order.orderCase === 0 ? '테이크아웃' : '매장식사'}</span>
+                        </div>
+
+                        {/* <div style={{ marginTop: '1rem' }}>가격 : {order.amount} 원</div> */}
 
                         <Divider orientation="horizontal" />
                       </div>

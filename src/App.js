@@ -18,7 +18,10 @@ function App() {
 
   const [login, setLogin] = useState('inactive');
 
-  useEffect(() => {setLogin(localStorage.getItem('token'))}, [login]);
+  useEffect(() => {
+    const userData = sessionStorage.getItem('user');
+    setLogin(userData);
+  }, [login]);
 
   return (
     <>

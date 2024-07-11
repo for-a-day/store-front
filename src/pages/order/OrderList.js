@@ -13,25 +13,43 @@ const OrderList = ({ nowTable, setNow , reload, setTableName}) => {
 
   const [tables, setTableList] = useState([]);
   const [orders, setOrderList] = useState([]);
+
+  // 스토어 넘버 세션에서 가져오기
   
   useEffect(() => {
     const fetchTables = async () => {
       try {
-        const tableList = await getTableList(localStorage.getItem('storeNo'));
-        setTableList(tableList);
-      } catch (error) {}
+        const userData = sessionStorage.getItem('user');
+    
+        const storeNo = JSON.parse(userData).storeNo;
+    
+        const tableList = await getTableList(storeNo);
+        if(tableList !== "error"){
+          setTableList(tableList);
+        }
+        else{
+          return "error";
+        }
+      } catch (error) {return error}
     };
 
     const fetchOrders = async () => {
       try {
-        const orderList = await getOrderList(localStorage.getItem('storeNo'));
-        setOrderList(orderList);
-      } catch (error) {}
+        const userData = sessionStorage.getItem('user');
+    
+        const storeNo = JSON.parse(userData).storeNo;
+        const orderList = await getOrderList(storeNo);
+        if(orderList){
+          setOrderList(orderList);
+        }
+      } catch (error) {return error}
     };
 
-    setNow(0);
-    fetchTables();
+    const response = fetchTables();
+    if(response !== "error"){
+      setNow(0);
     fetchOrders();
+    }
   }, [reload]);
 
 

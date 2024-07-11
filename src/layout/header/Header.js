@@ -33,11 +33,24 @@ const Header = (props) => {
   });
   const { openPopup } = usePopup();
 
+  const [userDate , setUser] = useState('');
+
   useEffect(()=>{
-    setStoreName(localStorage.getItem('storeName'));
-    setSellerName(localStorage.getItem('rprName'));
-    setPosNumber(localStorage.getItem('storeNo'));
-  }, [localStorage.getItem('storeNo')])
+
+    
+    const userData = sessionStorage.getItem('user');
+    if(userData){
+      setUser(userData);
+      
+      const storeName = JSON.parse(userData).storeName;
+      const rprName = JSON.parse(userData).rprName;
+      const storeNo = JSON.parse(userData).storeNo;
+      setStoreName(storeName);
+      setSellerName(rprName);
+      setPosNumber(storeNo);
+
+    }
+  }, [userDate])
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -65,7 +78,9 @@ const Header = (props) => {
   };
 
   const logout = () =>{
-    localStorage.clear();
+    // localStorage.clear();
+    sessionStorage.clear();
+    setUser('');
     props.setLogin(false);
     navigate('./'); 
   }
@@ -185,7 +200,7 @@ const Header = (props) => {
         {/* ------------------------------------------- */}
         
         
-        {localStorage.getItem('token')?
+        {sessionStorage.getItem('user')?
         <Box sx={{display:"flex", fontSize:15}}>
           <Typography sx={{pr:2, color:Palette.sub}}>
             매장명 : {storeName}
@@ -243,7 +258,7 @@ const Header = (props) => {
             ml: 1,
           }}
         ></Box>
-        {localStorage.getItem('token')? <Button
+        {sessionStorage.getItem('user')? <Button
           aria-label="menu"
           color="inherit"
           aria-controls="profile-menu"

@@ -9,23 +9,50 @@ const SalesDashboard = () => {
   const [sales, setSales] = useState([]);
 
   const getSales = async () => {
-    const storeNo = localStorage.getItem('storeNo');
+    const userData = sessionStorage.getItem('user');
+
+    const storeNo = JSON.parse(userData).storeNo;
 
     console.log(storeNo);
     try {
+      const userData = sessionStorage.getItem('user');
+
+      const token = JSON.parse(userData).token;
       const config = {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          Authorization: `Bearer ${token}`,
         },
       };
       const response = await axios.get(`http://localhost:9001/sales?storeNo=${storeNo}`, config);
+
+      if (response.status !== 200) {
+        alert('서버 응답 오류');
+        return 'error';
+      }
+
       const salesDetail = response.data.data.salesDetail;
       console.log(response.data.data);
       console.log(salesDetail);
       setSales(salesDetail);
     } catch (error) {
-      console.error('Error get stocks:', error);
-      throw error;
+      if (error.response) {
+        // 서버가 응답을 반환했을 때
+        console.error(`Error Status: ${error.response.status}`);
+        console.error(`Error Data: ${JSON.stringify(error.response.data)}`);
+        if (error.response.status === 403 || error.response.status === 401) {
+          alert('권한이 없습니다.');
+        } else {
+          alert('매출 조회에 실패하였습니다.');
+        }
+      } else if (error.request) {
+        // 요청이 서버에 도달하지 못했을 때
+        console.error('No response received from server');
+        alert('서버에 연결할 수 없습니다.');
+      } else {
+        // 요청을 설정하는 중에 오류가 발생했을 때
+        console.error(`Error Message: ${error.message}`);
+        alert('알 수 없는 오류가 발생하였습니다.');
+      }
     }
   };
 
